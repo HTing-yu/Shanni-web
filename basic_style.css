@@ -1,0 +1,55 @@
+@import url(http://fonts.googleapis.com/earlyaccess/amstelvaralpha.css);
+/* 黑源字體 */
+/* header */
+            .container-fluid{
+                width: 100%;
+                height: 100px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .picbolck{
+                height: 100%;
+            }
+            #logo{
+                height: 100%;
+            }
+            .nav-item{
+                margin-left: 2%;
+            }
+            .nav-text{
+                font-family:DFKai-sb;
+                font-size: 1.5em;
+            }
+            .headerQuick{
+                /* border:1px solid blue; */
+                margin-top: 15px;
+                margin-right: 2%;
+                
+            }
+            button[class="btn btn-info"]{
+                /* border:1px solid black; */
+                cursor: pointer;
+                /* border-radius: 50%; */
+                padding: 0.5px 5px 4.5px 5px;
+                margin: 0% 10%;
+            }
+            .headerQuick p{
+                position: relative;
+                right: 25px;
+            } 
+            
+            
+/* body */
+            #container{
+                margin-top: 120px;
+                width: 100%;
+            }
+/* footer */
+            footer{
+                z-index: 101;
+            }
+            img[alt="aboutUsPic"]{
+                height: 100%;
+                object-fit:contain;
+            }
+            

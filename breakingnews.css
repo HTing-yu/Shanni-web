@@ -1,0 +1,34 @@
+#container{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    max-height: 100rem;
+}
+.title{
+    border: 2px solid green;
+    width: 70%;
+    margin-top: 3%;
+    margin-right: 20%;
+}
+.newsblock{
+    margin-top: 3%;
+    margin-right: 10%;
+    width: 70%;
+    height: 300px;
+    display: flex;
+    justify-content: space-around;
+    background-color: aqua;
+}
+.newspiclock{
+    width: 40%;
+}
+.newspic{
+    width: 100%;
+    margin: 2%;
+    transform: scale(0.85);
+    object-fit: contain;
+}
+.newstext{
+    background-color: rgb(218, 134, 25);
+    width: 60%;
+}

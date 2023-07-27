@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="description" content="簡單的生活，輕鬆的日常，把人生淬煉成簡單的料理，豐富生活的動力。">
+        <title>Shanni姍妮好心晴</title>
+        <link rel="icon" href="./picture/shanni.jpg" type="image/jpg">
+        <link rel="apple-touch-icon" href="./picture/shanni.jpg" type="image/jpg">
+        <meta property="og:title" content="Shanni姍妮好心晴|糕點|蛋糕|餅乾|點心|貓咪">
+        <meta property="og:local" content="zh_TW">
+        <meta property="og:description" content="簡單的生活，輕鬆的日常，把人生淬煉成簡單的料理，豐富生活的動力。">
+        <meta property="og:type" content="website">    
+        <meta property="og:image" content="./HTML/10_HTML5/img/shanni.jpg">
+        <link rel="stylesheet" href="./basic_style.css">
+        <link rel="stylesheet" href="./complete.css">
+        
+            <!-- Jquary -->
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+        <!-- 尚未找到的插件 -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <!-- Boostrap js -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
+    </head>
+    
+    <script>
+        var summary = 0;
+        window.onload = function(){
+            
+            //購物清單建立
+            let tableData = '';
+            i = $('.table tr').length;
+            if(JSON.parse(sessionStorage.getItem('carts'))[0] === null){
+                tableData += `<tr><td colspan="6">查無此物</td></tr>`;
+            }else{
+                JSON.parse(sessionStorage.getItem('carts')).map(data=>{
+                    $('.buylist').append(
+                        `<tr>
+                    <td class="align-middle">${data.id}</td>
+                    <td class="align-middle"><img src=${data.img} style="width:25px"></td>
+                    <td class="xx align-middle fs-6">${data.item}</td>
+                    <td class="align-middle">${data.price}</td>
+                    <td class="align-middle">${data.quantity}</td>
+                    <td class="align-middle">${data.quantity*data.price}</td>
+                    </tr>`
+                    )
+                    summary = summary + Number(data.quantity)*Number(data.price);
+                    $('#summary span').html(`${summary}元`);
+                })
+            };
+            
+            
+            //購物車氣泡球
+            let no = 0;
+            JSON.parse(sessionStorage.getItem('carts')).map(data=>{
+            no = no + Number(data.quantity);
+            })
+            // $('.headerQuick p').html(no);
+
+            // 顧客資料輸出
+            if(JSON.parse(sessionStorage.getItem('customers'))[0] === null){
+                tableData += `<tr><td colspan="6">查無此物</td></tr>`;
+            }else{
+                let orderdata =JSON.parse(sessionStorage.getItem('customers'))
+                let firstnames = orderdata.firstname;
+                let lastname = orderdata.lastname;
+                let email = orderdata.email;
+                let phone = orderdata.phone;
+                let telephone = orderdata.telephone;
+                let addr = orderdata.addr;
+                $('.name').html(firstnames+lastname);
+                $('.email').html(email);
+                $('.phone').html(phone);
+                $('.telephone').html(telephone);
+                $('.addr').html(addr);
+            };
+
+            // 暫存資料刪除
+            $('.profile a').click(function(){
+                sessionStorage.clear();
+            })
+        };
+    // 刪除用
+    function del(who){
+        let value = $(who).parent().siblings('.xx').text()
+        let items = [];
+        if(confirm(`是否刪除 ${value}`)){
+            $(who).parent().parent().remove();
+
+            // 重新建立一個暫存
+            JSON.parse(sessionStorage.getItem('carts')).map(data=>{
+				if(data.item != value){
+					items.push(data);
+				}
+			});
+			sessionStorage.setItem('carts',JSON.stringify(items));
+
+            // 重新計算總價
+            let i =$('.table tr').length - 1;
+            var summary = 0;
+            for (j = 0; j<i; j++){
+                y = Number($('.table tbody').children().eq(j).children().eq(5).html());
+                summary += y;
+            }
+            sessionStorage.removeItem(value)
+        $('#summary span').html(`${summary}元`);
+        window.location.reload();
+    }}
+    </script>
+
+    <body>
+        <!-- chatus暫放區 -->
+        <div class="modal fade" id="chatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">與我們聯絡</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">姓名</label>
+                                <input type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-email" class="col-form-label">電子信箱</label>
+                                <input type="text" class="form-control" id="recipient-email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">內容</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-primary">傳送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 購物車暫放區 -->
+        <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="buycart" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">購物車</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="accordion-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col"> </th>
+                                <th scope="col">商品</th>
+                                <th scope="col">價格</th>
+                                <th scope="col">數量</th>
+                                <th scope="col">小計</th>
+                            </tr>
+                        </thead>
+                        <!-- <tbody class="buylist">
+
+                        </tbody> -->
+                        <hr>
+                    </table>
+                    <div id="summary">    
+                        總計為:0元
+                    </div>
+                </div>
+                <!-- <div class="d-grid gap-2 col-6 mx-auto">
+                    <button class="btn btn-outline-secondary disabled" type="button"><a href="./check.html">結帳去</a></button>
+                </div> -->
+            </div>
+        </div>
+        
+
+
+
+
+
+        <!-- 複製Boostrap-navbar改寫 -->
+        <nav class="navbar navbar-expand-xl bg-body-tertiary fixed-top">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <div class="picbolck">
+                    <a class="navbar-brand" href="./homepage.html"><img id="logo" alt="Logo" src="./picture/shanni.jpg"></a>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                    aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- offcanvas navbar位置 -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Shanni姍妮好心晴</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-start d-flex align-items-center flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="./homepage.html"><span class="nav-text">首頁</span></a>
+                            </li>
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="#"><span class="nav-text">最新消息</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><span class="nav-text">產品介紹</span></a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="./order.html"><span class="nav-text">菜單</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="./Contentus.html"><span class="nav-text">聯絡我們</span></a>
+                            </li>
+                        </ul>
+                        <!-- 右(下)工具群集 -->
+                        <div class="headerQuick d-flex justify-content-center align-items-center">
+                            <!-- 聯絡我們 -->
+                            <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#chatus">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat" viewBox="0 0 16 16">
+                                    <path d="M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z"/>
+                                </svg>
+                                <!-- https://icons.getbootstrap.com/icons/chat/ -->
+                            </button>
+                            
+                            <!-- 購物車 -->
+                            <button type="button" class="btn btn-light" data-bs-toggle="offcanvas" data-bs-target="#buycart">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                </svg>
+                                <!-- https://icons.getbootstrap.com/icons/cart/ -->
+                                <!-- 購物車的數字 -->
+                            </button>
+                            <p class="badge text-bg-secondary">0</p>                    
+                        </div>
+                        <form class="d-flex mt-3" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id ="container">
+            <div class="page justify-content-around">
+                <!-- 流程方塊 -->
+                <div class="h1 text-center"><strong>訂單完成</strong></div>
+                <div class="row mt-3 justify-content-around">
+                    <div class="col-12 col-md-3">
+                        <div class="alert alert-light alert-rounded text-center" role="alert">1.訂單資料</div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="alert alert-light alert-rounded text-center" role="alert">2.付款方式</div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="alert alert-success alert-rounded text-center" role="alert">3.訂單完成</div>
+                    </div>
+                </div>
+                
+                <!-- 訂單細項方塊 -->
+                <div class="row justify-content-center mt-4">
+                    <div class="accordion col-md-10">
+                        <div class="accordion-item">
+                            <div class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    訂單細項
+                                </button>
+                            </div>
+
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <table class="table table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col"> </th>
+                                                <th scope="col">商品</th>
+                                                <th scope="col">價格</th>
+                                                <th scope="col">數量</th>
+                                                <th scope="col">小計</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="buylist">
+
+                                        </tbody>
+                                        <hr>
+                                    </table>
+                                    <div id="summary">    
+                                        總計為:<span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                </div>
+
+                <!-- 買家資料 -->
+                <div class="profile mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-8 text-center">
+                            <h1>訂購人資料</h1>
+                        </div>
+                        <div class="col-md-8 text-center">
+                            <table class="table table-striped">
+                                <thead>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </thead>
+                                <tbody class="customerdata">
+                                    <tr>
+                                        <th scope="row">姓名</th>
+                                        <td colspan="4" class="name">..</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">電子信箱</th>
+                                        <td colspan="4" class="email">..</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">手機</th>
+                                        <td colspan="4" class="phone">..</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">市話</th>
+                                        <td colspan="4" class="telephone">..</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">住址</th>
+                                        <td colspan="4" class="addr">..</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <a href="./homepage.html" class="btn col-5 btn-success btn-lg mt-5">回到首頁</a>
+                    </div>
+                </div>
+
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+              <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+                <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+              </a>
+              <span class="text-muted">&copy;Copyright-姍妮好心晴</span>
+            </div>
+        
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3">
+                    <a class="text-muted" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                            <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                        </svg>
+                        <!-- https://icons.getbootstrap.com/icons/twitter/ -->
+                    </a>
+                </li>
+                <li class="ms-3">
+                    <a class="text-muted" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+                        </svg>
+                        <!-- https://icons.getbootstrap.com/icons/instagram/ -->
+                    </a>
+                </li>
+                <li class="ms-3">
+                    <a class="text-muted" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                            <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                        </svg>
+                        <!-- https://icons.getbootstrap.com/icons/facebook/ -->
+                    </a>
+                </li>
+            </ul>
+        </footer>
+
+    </body>
+</html>
